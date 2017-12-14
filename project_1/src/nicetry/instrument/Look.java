@@ -1,6 +1,9 @@
 package nicetry.instrument;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import nicetry.classclass.Location;
+import nicetry.classclass.Ranking;
 import nicetry.classclass.Weather;
 
 import java.io.IOException;
@@ -26,6 +29,12 @@ public class Look {
         byte[] buff = new byte[1024];
         int len = inputStream.read(buff);
         String str = new String(buff, 0, len,"utf-8");
-        System.out.println(str);
+//        System.out.println(str);
+        JSONArray jsonArray = JSONArray.fromObject(str);
+        for (int i=0;i<jsonArray.size();i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            Ranking ranking = (Ranking) JSONObject.toBean(jsonObject, Ranking.class);
+            System.out.println("第" + (i+1) + "名: " + ranking.toString());
+        }
     }
 }
