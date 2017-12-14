@@ -42,7 +42,7 @@ public class UserOperate {
         if (user.getPassword().length()>14){
             throw new PasswordTooLongException();
         }
-        if (!Pattern.matches("/^(?=.*[a-z]+.*)(?=.*[A-Z]+.*)(?=.*\\d+.*)$/"
+        if (!Pattern.matches(".*[a-z]+.*[A-Z]+.*\\d+.*"
                 ,user.getPassword())){
             throw new PasswordNotSafetyException();
         }

@@ -3,7 +3,12 @@
 <Data> 
   <User> 
     <userName>15071377395</userName>  
-    <password>Pgg123456</password>
-    <name>nicetry</name>
+    <password>Pgg123456</password>  
+    <name>nicetry</name> 
+  </User>  
+  <User>
+    <userName>15327262698</userName>
+    <password>passWord123</password>
+    <name>Nicetry</name>
   </User>
 </Data>
