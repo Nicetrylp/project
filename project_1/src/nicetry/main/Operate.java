@@ -1,6 +1,8 @@
 package nicetry.main;
 
 import nicetry.classclass.User;
+import nicetry.exception.LoginException;
+import nicetry.exception.RegisterException;
 import nicetry.instrument.Look;
 import nicetry.userdao.UserOperate;
 import org.dom4j.DocumentException;
@@ -66,13 +68,18 @@ public class Operate {
                 String userName = scanner.nextLine();
                 System.out.println("请输入您的密码:");
                 String password = scanner.nextLine();
-                user = UserOperate.login(userName, password);
-                if (user != null){
-                    System.out.println(user.getName());
-                    break;
-                }else {
-                    System.out.println("请重新登录...");
+                try {
+                    user = UserOperate.login(userName, password);
+                    if (user != null){
+                        System.out.println(user.getName());
+                        break;
+                    }
+                } catch (LoginException e) {
+                    System.out.println(e.getMessage());
+                    System.out.println("请重新选择....");
+                    continue;
                 }
+
             }else if (key == 2){
                 System.out.println("请输入您的用户名:");
                 String userName = scanner.nextLine();
@@ -80,7 +87,11 @@ public class Operate {
                 String password = scanner.nextLine();
                 System.out.println("请输入您的昵称:");
                 String name = scanner.nextLine();
-                UserOperate.register(new User(userName,password,name));
+                try {
+                    UserOperate.register(new User(userName,password,name));
+                } catch (RegisterException e) {
+                    System.out.println(e.getMessage());
+                }
             }else {
                 System.out.println("输入错误,请重新输入...");
             }
