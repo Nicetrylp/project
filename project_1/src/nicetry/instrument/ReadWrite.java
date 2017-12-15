@@ -1,6 +1,6 @@
 package nicetry.instrument;
 
-import nicetry.classclass.User;
+import nicetry.bean.User;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;

@@ -1,6 +1,6 @@
 package nicetry.main;
 
-import nicetry.classclass.User;
+import nicetry.bean.User;
 import nicetry.exception.LoginException;
 import nicetry.exception.RegisterException;
 import nicetry.instrument.Look;
@@ -26,7 +26,8 @@ public class Operate {
         boolean isEnd = false;
         while (!isEnd) {
             System.out.println("请选择您要进行的操作:");
-            System.out.println("1.查询天气\t2.查询手机号归属地\t3手速游戏\t4.查询手速游戏前十用户");
+            System.out.println("1.查询天气\t2.查询手机号归属地\t3手速游戏\t4.查询手速游戏前十用户\t" +
+                    "5.查询第一名的成绩");
             int key = scanner.nextInt();
             scanner.nextLine();
             switch (key) {
@@ -48,6 +49,8 @@ public class Operate {
                     Look.ranking();
                     break;
                 case 5:
+                    Look.first();
+                case 6:
                     isEnd = true;
                     break;
                 default:

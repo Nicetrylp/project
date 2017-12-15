@@ -1,6 +1,8 @@
 package nicetry.main;
 
-import nicetry.classclass.User;
+import nicetry.bean.User;
+import nicetry.instrument.Look;
+import nicetry.userdao.Constant;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +56,7 @@ public class Game {
     }
 
     private void upLoad(User user) throws IOException {
-        URL url = new URL("http://192.168.20.221:8080/day16/insert?username=" +
+        URL url = new URL(Constant.DATABASE_UP +
                 user.getName() +
                 "&score=" +
                 score);

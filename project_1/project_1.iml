@@ -19,5 +19,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="commons-beanutils-1.8.3" level="project" />
+    <orderEntry type="library" name="xmlpull_1_0_5" level="project" />
   </component>
 </module>

@@ -1,6 +1,6 @@
 package nicetry.userdao;
 
-import nicetry.classclass.User;
+import nicetry.bean.User;
 import nicetry.exception.*;
 import nicetry.instrument.ReadWrite;
 import org.dom4j.DocumentException;

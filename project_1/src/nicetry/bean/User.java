@@ -1,4 +1,4 @@
-package nicetry.classclass;
+package nicetry.bean;
 
 public class User {
     private String userName;
