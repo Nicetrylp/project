@@ -20,5 +20,7 @@
     </orderEntry>
     <orderEntry type="library" name="commons-beanutils-1.8.3" level="project" />
     <orderEntry type="library" name="xmlpull_1_0_5" level="project" />
+    <orderEntry type="library" name="commons-dbutils-1.6" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-5.1.18-bin" level="project" />
   </component>
 </module>

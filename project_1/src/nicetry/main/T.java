@@ -2,6 +2,7 @@ package nicetry.main;
 
 import nicetry.bean.User;
 import nicetry.exception.RegisterException;
+import nicetry.instrument.DatabaseOperate;
 import nicetry.instrument.Look;
 import nicetry.userdao.Constant;
 import nicetry.userdao.UserOperate;
@@ -12,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.SQLException;
+import java.util.Map;
 import java.util.Scanner;
 
 public class T {
@@ -47,5 +50,17 @@ public class T {
     @Test
     public void t5() throws IllegalAccessException, IOException, InstantiationException {
             Look.location("13333333333");
+    }
+    @Test
+    public void t6() throws SQLException {
+        Map<String, User> map = DatabaseOperate.read();
+        for (String s : map.keySet()) {
+            System.out.println(map.get(s));
+        }
+    }
+    @Test
+    public void t7() throws SQLException {
+        User user = new User("123","123","123");
+        DatabaseOperate.write(user);
     }
 }
