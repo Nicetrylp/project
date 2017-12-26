@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <style type="text/css">
+        .div1{height: 600px;width: 600px;background-color: #eeeeee;position: relative; left: 40%;top: 100px}
+        .div1 div{height: 70px;line-height: 70px;margin-top: 20px; float: left;margin-left: 2em;}
+        input{ height: 40px;width: 300px; border: solid #666666 1px;}
+        .div1 .button{margin-left: 6em;float: left}
+        .i1{background-color: blue;color: white;font-size: 18px;font-weight: bold;}
+    </style>
+</head>
+<body>
+    <div class="div1">
+        <form class="" method="post">
+            <h1 style = "text-align: center">注册</h1>
+            <div><label for="username" style="margin-left: 1em">用户名</label>
+                <input type="text" id="username" onfocus="showfocus()" onblur="showBlur()">
+                <span style="color: red ;visibility: hidden;font-size: 14px"id="userText">用户名为邮箱或手机号</span>
+            </div>
+            <div><label for="password">登录密码</label>
+                <input type="password" id="password" onfocus="showpassfocus()" onblur="showpassBlur()">
+                <span style="color: red ;visibility: hidden;font-size: 14px"id="passText">密码为6-16位字母或数字</span>
+            </div>
+            <div><label style="margin-left: 2em">昵称</label>
+                <input type="text" id="name">
+            </div>
+            <div class="button"><input type="submit"value="下一步" class="i1" onmousedown="ondown()"
+            id="submit"></div>
+        </form>
+    </div>
+</body>
+<script type="text/javascript">
+    function showpassfocus() {
+        var uT = document.getElementById("passText");
+        uT.style.visibility = "visible";
+    }
+    function showpassBlur() {
+        var uT = document.getElementById("passText");
+        uT.style.visibility = "hidden";
+    }
+    function showfocus() {
+        var uT = document.getElementById("userText");
+        uT.style.visibility = "visible";
+    }
+    function showBlur() {
+        var uT = document.getElementById("userText");
+        uT.style.visibility = "hidden";
+    }
+    function ondown() {
+        var sub = document.getElementById("submit");
+        sub.style.backgroundColor = "red";
+    }
+</script>
+</html>
