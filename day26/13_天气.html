@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>天气</title>
+    <script src="JS/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+    <div></div>
+</body>
+<script type="text/javascript">
+    $.getJSON({
+        url : "http://api.k780.com/?app=weather.today&weaid=wuhan&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json&jsoncallback=?",
+        dataType : "jsonp",
+        type:"Post",
+        jsonpCallback: "jsonpCallback"
+    },function (data,status) {
+        console.log(status);
+        console.log(data);
+        $.each(data,function (i,data) {
+            $('div').text("citynm : "+data['citynm'] + "\nweather : "+data['weather'])
+        })
+
+    })
+</script>
+</html>
