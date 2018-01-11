@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <style type="text/css">
+        ul,li{margin: 0;padding: 0;text-decoration: none ; list-style: none}
+        .img{float: left;margin-top: 200px;margin-left: 300px}
+        .img img{height: 600px}
+        .form{height: 700px;width: 600px; float: right;border: 1px solid red;margin-right: 200px;margin-top: 150px;
+        background-color: #eeeeee}
+        li{height: 75px;text-align: center;line-height: 75px;}
+        #username,#password{height: 40px;margin: 0;padding: 0;width: 400px;font-size: 20px;border: solid #999999 2px}
+        [type = 'submit']{margin: 0;padding: 0;border: 0;background-color: deepskyblue;font-size: 18px;
+            height: 50px;width: 500px;color: white}
+    </style>
+    <script src="JS/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+    <div class="head"></div>
+    <span id="time" style="color: red;font-size: 18px;font-weight: bold"></span>
+    <div class="img"><img src="img/头像.jpg"></div>
+    <div class="form">
+        <form action="/user" method="post">
+            <input type="hidden" name="method" value="login">
+            <h1 style = "text-align: center">登录</h1>
+            <ul>
+                <li><label for="username">用户名</label>
+                    <input id="username" type="text" name="username" onfocus="showfocus(this)" onblur="showBlur(this)">
+                    <span style="color: red ;visibility: hidden;font-size: 14px"id="userText">用户名为邮箱或手机号</span>
+                </li>
+                <li><label for="password">密码</label>
+                    <input id="password" type="password" name="password" onfocus="showpassfocus()" onblur="showpassBlur()">
+                    <span style="color: red ;visibility: hidden;font-size: 12px"id="passText">密码为6-16位字母或数字</span>
+                </li>
+                <li><input type="checkbox" checked = "true">同意并遵守<a href="#">服务条款</a></li>
+                <li><input type="submit" value="登录" onmousedown="ondown()" onmouseup="onup()" id="submit"></li>
+                <li><a href="register.html">免费注册</a> <a href="#">忘记密码</a> </li>
+            </ul>
+        </form>
+    </div>
+</body>
+<script type="text/javascript">
+    function showfocus(ele) {
+        ele.style.border = "solid red 2px";
+        ele.style.fontSize = "24px";
+    }
+    function showBlur(ele) {
+        ele.style.border = "solid #999999 2px";
+        ele.style.fontSize = "20px";
+    }
+    function showpassfocus() {
+        var uT = document.getElementById("passText");
+        uT.style.visibility = "visible";
+    }
+    function showpassBlur() {
+        var uT = document.getElementById("passText");
+        uT.style.visibility = "hidden";
+    }
+    function ondown() {
+        var sub = document.getElementById("submit");
+        sub.style.backgroundColor = "red";
+    }
+    function onup() {
+        var sub = document.getElementById("submit");
+        sub.style.backgroundColor = "deepskyblue";
+    }
+    function time() {
+        var time = document.getElementById("time");
+        var date = new Date();
+        var string = date.toLocaleString();
+        time.innerText = string;
+        setInterval(function () {
+            var date = new Date();
+            var string = date.toLocaleString();
+            time.innerText = string;
+        },1000)
+    }
+    time();
+    $.get("/user?method=cookie",function (data, status) {
+        console.log(status);
+        console.log(data);
+        $('#username').attr({"value":data})
+    })
+</script>
+</html>
