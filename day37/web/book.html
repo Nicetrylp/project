@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>书店详情</title>
+    <script src="/JS/jquery-3.2.1.min.js"></script>
+    <style type="text/css">
+        a{text-decoration-line: none;font-size: 16px;margin: 2px}
+        div{display: inline-block; height: 20px;width: 20px;border: 1px solid skyblue;
+            margin: 2px;text-align: center}
+        .div1{font-weight: bold;border: 0}
+        .div2{width: 60px}
+        .input{width: 30px}
+    </style>
+</head>
+<body>
+<table border="1"></table>
+</body>
+<script type="text/javascript">
+    var url = location.search;
+    console.log(url);
+    xxx("");
+    function xxx(pc) {
+        $('tr').remove();
+        $('div').remove();
+        $('input').remove();
+        $.get("/book"+url+pc,function (data, status) {
+            console.log(data);
+            console.log(status);
+            if(status == "success"){
+
+                var jsonData = $.parseJSON(data);
+                var jsonDatum = jsonData["list"];
+                console.log(jsonDatum);
+                if (jsonDatum.length != 0){
+                    $('table').append(
+                        $('<tr>').append($('<th>').text("bname"))
+                            .append($('<th>').text("author"))
+                            .append($('<th>').text("price"))
+                            .append($('<th>').text("category"))
+                    );
+                    $.each(jsonDatum,function (index, data) {
+                        $('table').append(
+                            $('<tr>').append(
+                                $('<td>').text(data["bname"])
+                            ).append(
+                                $('<td>').text(data["author"])
+                            ).append(
+                                $('<td>').text(data["price"])
+                            ).append(
+                                $('<td>').text(data["category"])
+                            )
+                        )
+                    })
+                }
+                else{
+                    $('body').html("<a href='index.html'>没有数据,点击返回</a>")
+                }
+                if (jsonData["pageNum"] > 1){
+                    $('body').append(
+                        $('<div>').attr({"class":"div2"}).text("上一页").click(function () {
+                            xxx(jsonData["pageNum"]-1)
+                        })
+                    )
+                }
+                for(var i=jsonData["start"];i<=jsonData["end"];i++){
+                    if (jsonData["pageNum"] == i){
+                        $('body').append(
+                            $('<div>').attr({"class":"div1"}).text(i).click(function () {
+                                xxx($(this).text());
+                            })
+                        )
+                    }else{
+                        $('body').append(
+                            $('<div>').text(i).click(function () {
+                                xxx($(this).text());
+                            })
+                        )
+                    }
+                }
+                if (jsonData["pageNum"] < jsonData["totalPage"]){
+                    $('body').append(
+                        $('<div>').attr({"class":"div2"}).text("下一页").click(function () {
+                            xxx(jsonData["pageNum"]+1)
+                        })
+                    )
+                }
+                if (jsonDatum.length != 0) {
+                    $('body').append(
+                        $('<input>').attr({"type": "text", "class": "input"})
+                    ).append(
+                        $('<div>').text("跳转").css({"width": "40px"}).click(function () {
+                            console.log($('.input').val());
+                            xxx($('.input').val())
+                        })
+                    )
+                }
+            }
+        })
+    }
+
+</script>
+</html>

@@ -1,0 +1,157 @@
+分页 :
+实现一个分页的步骤 :
+    服务器需要知道的有 :
+每一页有多少数据 : pageSize     // 可以自己设置每页显示多少数据
+一共有多少数据 : totalRecord    // 通过查询数据库获取 selece count(*) from xxx
+当前页码 : pageNum              // 通过浏览器传入
+查询条件 : condition            // 通过浏览器传入
+    浏览器需要知道的有 :
+每一页的数据 : List<T> list       // 通过查询数据库获取
+总页数       : totalPage           // 总页数/每页数据量
+显示多少分页 : howManyPages       // 可以自己设置
+当前页码 : pageNum              // 通过自己传给后台,然后后天传回
+开始页码 : start                //
+结束页码 : end                  //
+    数据库需要知道的有 :
+每次查询多少数据     pageSize   // 自己设置
+从多少条数据开始查询  selectStart     // (pageNum-1)*pageSize
+查询条件 :  condition                    // 通过浏览器传入
+
+实现一个json的多条件组合查询
+servlet :
+    1. 获取请求参数  : request.getParameter("请求参数");
+    2. 获取当前页码  : request.getParameter("当前页码");
+    3. 拼接查询条件 :
+    String[] a1 = {"条件1","条件2","条件3","条件4"};
+    String[] a2 = {"值1","值2","值3","值4"};
+    StringBuffer condition = new StringBuffer("");
+    if(值1 != null && !值1.equals("") || ......){
+        // 说明有查询条件 拼接一个where
+        condition.append(" where ");
+        // 设置一个boolean值,用来在第二个条件中拼接and
+        boolean addAnd = false;
+        for(int i=0;i<a2.length;i++){
+            if(a2[i]!=null && !a2[i].equals("")){
+                // 说明这个参数是查询条件
+                if(addAnd){
+                    // 第一次时,addAnd 是false,进不来,之后可以进来,保证在第二个条件开始才有and
+                    condition.append(" and ");
+                }
+                // 将 条件=值传入
+                condition.append(a1[i]+"="+"\'"+a2[i]+"\'"); // 这里需要写成 条件 = '值'
+            }
+        }
+    }
+    4. 将当前页信息与sql语句传给service
+    5. 获得service返回的PageBean值
+    6. 将PageBean转换为json数据,传给前端
+service :
+    1. 获得servlet传入的pageNum和sql
+    2. 拼接查询语句 , 查询总数据量
+        String selectCount = "select count(*) from xxx";
+        selectCount += sql;
+    3. 查询数据库,获取返回的数据条数 totalRecord
+    4. 创建PageBean对象,给初始值 totalRecord(总数据),pageNum(当前页),pageSize(每页显示的数据),howManyPages(多少页)
+        PageBean pageBean = new PageBean(totalRecord,pageNum,10,10);
+        在PageBean的构造方法中,计算出 start,end ....
+    5. 拼接查询语句 , 查询分页数据
+        String selectData = "select * from xxx";
+        selectData += sql;
+        selectData += " limit("+pageBean.selectStart + ","+pageBean.pageSize+")";
+    6. 通过sql语句,查询数据库,返回一个该对象的集合
+    7. 将该集合设置给pageBean
+    8. 将pageBean返回给servlet
+pageBean :
+    // 这些是外部传入的属性
+    private int pageNum;         // 当前页
+    private int totalRecord;     // 总数据条数
+    private int pageSize;        // 每页显示的数据量
+    private int howManyPages;    // 超链接有多少页
+    // 这些是计算得到的数据
+    private int totalPage;      // 总页数
+    private int start;          // 第一个分页应该是多少页
+    private int end;            // 最后一个分页应该是多少页
+    private int selectStart;    // 查询数据库应该从多少条查起
+    // 这个是查询数据库后设置的数据
+    private List<T> list;       // 保存查询到的数据
+
+    // 在构造方法中,初始化参数,设置计算数据
+    public PageBean(int totalRecord,int pageNum, int pageSize, int howManyPages){
+        // 初始化传入的参数
+        this.totalRecord = totalRecord;
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
+        this.howManyPages = howManyPages;
+        // 计算出总页数
+        if(totalRecord % pageSize == 0){
+            // 说明整除
+            this.totalPage = totalRecord/pageSize;
+        }else{
+            // 否则,多余的数据,再开一页
+            this.totalPage = totalRecord/pageSize + 1;
+        }
+        /**
+        /* 计算start 和 end;
+        /* 一般,当前页在分页的中间
+        /* 所以 start = pageNum - middle; end = pageNum + middle(奇数);end = pageNum+middle-1(偶数)
+        */
+        int middle = howManyPages/2;
+        start = pageNum - middle;
+        if(howManyPages%2 == 0){
+            end = pageNum + middle - 1;
+        }else{
+            end = pageNum + middle;
+        }
+        if(start < 1){
+            // 如果start < 1 , 说明无法到,最中间
+            start = 1;
+            end = start+howManyPages-start;
+        }
+        if(end > totalPage){
+            // 说明要到最后页了
+            end = totalPage;
+            start = end - howManyPages + 1;
+        }
+        // 还有一种特殊情况,当数据量不够分页的条目时
+        if(totalPage < howManyPages){
+            start = 1;
+            end = totalPage;
+        }
+        // 数据库应该从多少条数据开始查询
+        // 查询10条    第一页 0-9 第二页 10-19   第三页20-29; 可知 start = 当前页-1 * 每次查询多少
+        selectStart = (pageNum - 1)*pageSize;
+    }
+    // get/set方法
+js :
+    1. 获取请求参数
+    var url = location.search;
+    2. 访问servlet,获取json数据
+    function page(pageNum){
+        $.get("",function(data,status)){ }
+    }
+    3. 获取List中的数据,遍历使用表格显示
+    var xxlist = data[list];
+    $.each(xxlist,function(index,data)){ // 遍历显示}
+
+    4. 创建分页栏
+    // 使用for循环,从start到end
+    for(var i =data["start"];i<=data["end"];i++){
+        // 显示
+        // 这里使用div,添加点击事件
+        click(function(){page($(this).text())})
+    }
+    5. 当前页特殊标记
+    // 到for循环里面
+    if(i = data[pageNum]){//特殊样式}
+    6. 上一页
+    // for循环前面
+    if(data[pageNum]>1){// 上一页 page(data[pageNum] -1)}
+    7. 下一页
+    // for循环后面
+    if(data[pageNum]<data[totalPage]){// 下一页 page(data[pageNum] +1)}
+    8. 跳页
+    // 下一页后面,使用js创建一个input和一个button
+    button点击事件
+    click(function(){page($('input'.val()))})
+database :
+    根据sql语句查询就好
