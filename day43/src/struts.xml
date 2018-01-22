@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <constant name="struts.devMode" value="true"/>
+    <package name="user" extends="struts-default" namespace="/user">
+        <action name="login" class="employee.action.UserAction" method="login">
+            <result name="success" type="redirect">index.jsp</result>
+            <result name="error">../login.jsp</result>
+            <result name="input">../login.jsp</result>
+        </action>
+    </package>
+    <package name="employee" extends="struts-default" namespace="/employee">
+        <interceptors>
+            <interceptor name="interceptor" class="employee.action.Interceptor"/>
+            <interceptor-stack name="employee">
+                <interceptor-ref name="interceptor"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="employee"/>
+        <default-class-ref class="employee.action.EmployeeAction"/>
+        <global-results>
+            <result name="input">../login.jsp</result>
+            <result name="error">../user/index.jsp</result>
+            <result name="success" type="redirect">employee.jsp</result>
+        </global-results>
+        <action name="show" method="show"/>
+        <action name="add" method="add"/>
+        <action name="redact" method="redact">
+            <result name="success" type="redirect">redact.jsp</result>
+        </action>
+        <action name="update" method="update">
+            <result name="success" type="chain">show</result>
+        </action>
+    </package>
+</struts>
